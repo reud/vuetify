@@ -83,13 +83,23 @@ export default mixins(
     genTBody () {
       const children = []
       const daysInMonth = new Date(this.displayedYear, this.displayedMonth + 1, 0).getDate()
+      const beforeDaysInMonth = new Date(this.displayedYear,this.displayedMonth,0).getDate()
+
       let rows = []
       let day = this.weekDaysBeforeFirstDayOfTheMonth()
       let weekNumber = this.getWeekNumber()
 
       this.showWeek && rows.push(this.genWeekNumber(weekNumber++))
 
-      while (day--) rows.push(this.$createElement('td'))
+      // while (day--) rows.push(this.$createElement('td'))
+      for (let backDay = 0; backDay < day; ++backDay) {
+        const date = `${this.displayedYear}-${pad(this.displayedMonth)}-${pad(beforeDaysInMonth-backDay)}`
+        rows.push(this.$createElement('td', [
+          this.genButton(date, true, 'date', this.formatter)
+        ]))
+
+      }
+
       for (day = 1; day <= daysInMonth; day++) {
         const date = `${this.displayedYear}-${pad(this.displayedMonth + 1)}-${pad(day)}`
 
